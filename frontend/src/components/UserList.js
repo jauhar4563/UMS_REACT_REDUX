@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {  getAllUsers,reset,UserBlock, editUser} from '../features/adminAuth/adminAuthSlice';
+import Swal from 'sweetalert2';
+
 
 function UserList() {
 
@@ -26,15 +28,26 @@ function UserList() {
   };
 
   const handleEdit = (userId, name, email) => {
-    const newName = prompt("Enter new name:", name);
-    const newEmail = prompt("Enter new Email:", email);
-    if (newName === null || newEmail === null) {
-      return; 
-    }
-    if (newEmail && newName) {
-      dispatch(editUser({ userId, name: newName, email: newEmail }));
-    }
+    Swal.fire({
+      title: 'Edit User',
+      html: `
+        <input id="swal-input-name" class="swal2-input" value="${name}">
+        <input id="swal-input-email" class="swal2-input" value="${email}">
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Save',
+      preConfirm: () => {
+        const newName = document.getElementById('swal-input-name').value;
+        const newEmail = document.getElementById('swal-input-email').value;
+        if (!newName || !newEmail) {
+          Swal.showValidationMessage('Name and email are required');
+          return false;
+        }
+        dispatch(editUser({ userId, name: newName, email: newEmail }));
+      }
+    });
   };
+  
  
   return (
     <div className="user-list">

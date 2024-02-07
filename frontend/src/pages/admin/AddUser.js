@@ -2,7 +2,7 @@
 import {useState,useEffect} from 'react'
 import { FaUser } from 'react-icons/fa'
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { addUser, reset } from '../../features/adminAuth/adminAuthSlice'
 import Spinner from '../../components/Spinner'
@@ -128,6 +128,9 @@ function AddUser() {
             />
           </div>
           <div className='form-group'>
+          <Link to='/admin' className='btn btn-block'>
+              Go Back
+            </Link>
             <button type='submit' className='btn btn-block'>
               Submit
             </button>

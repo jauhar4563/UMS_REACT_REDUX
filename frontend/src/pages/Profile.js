@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { editUser, profileUpdate } from "../features/auth/authSlice";
 import { toast } from 'react-toastify'
+import Swal from 'sweetalert2';
+
 
 function Profile() {
   const dispatch = useDispatch();
@@ -46,14 +48,24 @@ function Profile() {
   
 
   const handleEdit = (userId, name, email) => {
-    const newName = prompt("Enter new name:", name);
-    const newEmail = prompt("Enter new Email:", email);
-    if (newName === null || newEmail === null) {
-      return;
-    }
-    if (newEmail && newName) {
-      dispatch(editUser({ userId, name: newName, email: newEmail }));
-    }
+    Swal.fire({
+      title: 'Edit Profile',
+      html: `
+        <input id="swal-input-name" class="swal2-input" value="${name}">
+        <input id="swal-input-email" class="swal2-input" value="${email}">
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Save',
+      preConfirm: () => {
+        const newName = document.getElementById('swal-input-name').value;
+        const newEmail = document.getElementById('swal-input-email').value;
+        if (!newName || !newEmail) {
+          Swal.showValidationMessage('Name and email are required');
+          return false;
+        }
+        dispatch(editUser({ userId, name: newName, email: newEmail }));
+      }
+    });
   };
   return (
     <div>
